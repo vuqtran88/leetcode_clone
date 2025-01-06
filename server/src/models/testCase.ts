@@ -1,9 +1,17 @@
 import mongoose, { Schema } from "mongoose";
+import { TestcaseType } from "../types";
 
-export const testCaseSchema = new Schema({
-    input: { type: Map, of: mongoose.Schema.Types.Mixed, required: true },
-    output: { type: mongoose.Schema.Types.Mixed, required: true },
-    problemId: { type: Schema.Types.ObjectId, ref: "Problem" }
+export const testcaseSchema = new Schema({
+    params: [
+        {
+            name: { type: String, required: true },
+            type: { type: String, required: true },
+            value: { type: String, required: true }
+        }
+    ],
+    expected: { type: mongoose.Schema.Types.Mixed, required: true },
+    problemId: { type: Schema.Types.ObjectId, ref: "Problem" },
+    tag: { type: String, enum: ["default", "hidden"], required: true, default: "default" }
 });
 
-export const TestCase = mongoose.model("TestCase", testCaseSchema);
+export const Testcase = mongoose.model<TestcaseType>("Testcase", testcaseSchema);

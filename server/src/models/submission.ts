@@ -1,4 +1,5 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
+import { SubmissionType } from "../types";
 
 export const submissionSchema = new Schema({
     code: { type: String, required: true },
@@ -7,4 +8,4 @@ export const submissionSchema = new Schema({
     timeStamp: { type: Date, default: Date.now }
 });
 
-export const Submission = mongoose.model("Submission", submissionSchema);
+export const Submission = mongoose.model<SubmissionType>("Submission", submissionSchema);

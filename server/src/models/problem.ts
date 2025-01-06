@@ -1,20 +1,5 @@
-import mongoose, { model, Schema } from 'mongoose';
-
-export interface ProblemDocument extends Document {
-    title: string;
-    description: string;
-    difficulty: 'easy' | 'medium' | 'hard';
-    executionMethod: {
-        name: string;
-        params: [executionMethodParam];
-    };
-    solutions: string[];
-}
-
-export interface executionMethodParam {
-    name: string;
-    type: string;
-}
+import { model, Schema } from 'mongoose';
+import { ProblemDocument } from '../types';
 
 export const problemSchema = new Schema<ProblemDocument>({
     title: { type: String, required: true },

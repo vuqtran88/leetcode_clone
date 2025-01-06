@@ -1,20 +1,20 @@
 import { Request, Response } from 'express';
-import {executionMethodParam, Problem, ProblemDocument} from '../models/problem';
-import { TestCase } from '../models/testCase';
+import {Problem} from '../models/problem';
 import { Submission } from '../models/submission';
-
+import { Testcase } from '../models/testcase';
 import { PythonShell } from 'python-shell';
+import { executionMethodParam, ProblemDocument } from '../types';
 
 export const getProblem = async (req: Request, res: Response) => {
-
+    console.log('GET /problems/:id');
     const { id } = req.params;
-    await Problem.findById(id, (err: Error, problem: ProblemDocument) => {
-        if (err) {
-            res.status(500).send('Problem not found');
-        } else {
-            res.status(200).send(problem);
-        }
-    });  
+    await Problem.findById(id).then((problem) => {
+        console.log('Problem found:', problem);
+        res.status(200).send(problem);
+    }).catch((error) => {
+        console.error(error);
+        res.status(500).send({message: 'Problem not found'});
+    });
 }
 
 export const createProblem = async (req: Request, res: Response) => {
@@ -23,24 +23,24 @@ export const createProblem = async (req: Request, res: Response) => {
 
     try {
         await Problem.create(problem);
-        res.status(201).send('Problem created');
+        res.status(201).send({message: 'Problem created'});
     } catch (error) {
         console.error(error);
-        res.status(500).send('Problem not created');
+        res.status(500).send({message: 'Problem not created'});
     };
 }
 
-export const createTestCase = async (req: Request, res: Response) => {
+export const createTestcase = async (req: Request, res: Response) => {
     const problemId = req.params.id;
-    const { input, output } = req.body;
+    const { params, expected } = req.body;
 
     try {
-        const testCase = await TestCase.create({ input, output, problemId });
-        console.log("Test case created: ", testCase);
-        res.status(201).send('Test case created');
+        const testcase = await Testcase.create({ params, expected, problemId });
+        console.log("Test case created: ", testcase);
+        res.status(201).send({message: 'Test case created'});
     } catch (error) {
         console.error(error);
-        res.status(500).send('Test case not created');
+        res.status(500).send({message: 'Test case not created'});
     }
 }
 
@@ -51,22 +51,22 @@ export const submitCode = async (req: Request, res: Response) => {
 
     try {
         await Submission.create({ userId, code, problemId });
-        res.status(201).send('Code submitted');
+        res.status(201).send({message: 'Code submitted'});
     } catch (error) {
         console.error(error);
-        res.status(500).send('Submission failed');
+        res.status(500).send({message: 'Submission failed'});
     }
 }
 
 export const runCode = async (req: Request, res: Response) => {
-    const { code, testCases }: { 
+    const { code, testcases }: { 
         code: string; 
-        testCases: { input: Record<string, any>}[]; 
+        testcases: { input: Record<string, any>}[]; 
     } = req.body;
 
     const problemId = req.params.id;
 
-    if (!code || !testCases || !problemId) {
+    if (!code || !testcases || !problemId) {
         return res.status(400).json({ message: 'Code, test cases, and problemId are required.' });
     }
 
@@ -85,8 +85,8 @@ export const runCode = async (req: Request, res: Response) => {
         const { name: methodName, params } = executionMethod;
         // Process test cases
         const results = await Promise.all(
-            testCases.map(async (testCase) => {
-                const { input } = testCase;
+            testcases.map(async (testcase) => {
+                const { input } = testcase;
                 const userCodeResult = await executePythonCode(code, methodName, params, input);
                 const solutionResult = await executePythonCode(solutions[0], methodName, params, input);
 
