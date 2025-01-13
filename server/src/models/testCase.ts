@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { TestcaseType } from "../types";
+import { ITestcase } from "../types";
 
 export const testcaseSchema = new Schema({
     params: [
@@ -14,4 +14,4 @@ export const testcaseSchema = new Schema({
     tag: { type: String, enum: ["default", "hidden"], required: true, default: "default" }
 });
 
-export const Testcase = mongoose.model<TestcaseType>("Testcase", testcaseSchema);
+export const Testcase = mongoose.model<ITestcase>("Testcase", testcaseSchema);

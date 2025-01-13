@@ -3,7 +3,7 @@ import {Problem} from '../models/problem';
 import { Submission } from '../models/submission';
 import { Testcase } from '../models/testcase';
 import { PythonShell } from 'python-shell';
-import { executionMethodParam, ProblemDocument } from '../types';
+import { IExecutionMethodParam, IProblemDocument } from '../types';
 
 export const getProblem = async (req: Request, res: Response) => {
     console.log('GET /problems/:id');
@@ -19,7 +19,7 @@ export const getProblem = async (req: Request, res: Response) => {
 
 export const createProblem = async (req: Request, res: Response) => {
 
-    const problem: ProblemDocument = { ...req.body };
+    const problem: IProblemDocument = { ...req.body };
 
     try {
         await Problem.create(problem);
@@ -72,7 +72,7 @@ export const runCode = async (req: Request, res: Response) => {
 
     try {
         // Fetch problem details from database
-        const problem: ProblemDocument | null = await Problem.findById(problemId);
+        const problem: IProblemDocument | null = await Problem.findById(problemId);
         if (!problem) {
             return res.status(404).json({ message: 'Problem not found' });
         }
@@ -119,7 +119,7 @@ export const runCode = async (req: Request, res: Response) => {
     } 
 }
 
-const executePythonCode = async (code: string, methodName: string, params: executionMethodParam [], input: Record<string, any>) => {
+const executePythonCode = async (code: string, methodName: string, params: IExecutionMethodParam [], input: Record<string, any>) => {
 
     // Generate arguments dynamically from `params`
     const argList = params

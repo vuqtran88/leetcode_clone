@@ -1,0 +1,37 @@
+scalar JSON
+
+type Testcase {
+    params: [Param!]!
+    problemId: String
+    expected: JSON
+    tag: String!
+
+}
+
+type Param {
+    name: String
+    type: String
+}
+
+input TestcaseInput {
+    params: [ParamInput!]!
+    problemId: String
+    expected: JSON
+    tag: String!
+}
+
+input ParamInput {
+    name: String
+    type: String
+}
+
+type Query {
+    getTestcases: [Testcase!]!
+    getTestcaseById(id: ID!): Testcase
+}
+
+type Mutation {
+    addTestcase(input: TestcaseInput!): Testcase!
+    updateTestcase(id: ID!, input: TestcaseInput!): Testcase!
+    deleteTestcase(id: ID!): Testcase!
+}

@@ -1,0 +1,47 @@
+type Param {
+  name: String
+  type: String
+}
+
+type ExecutionMethod {
+  name: String!
+  params: [Param!]!
+}
+
+type Problem {
+  id: ID!
+  title: String!
+  description: String!
+  difficulty: String!
+  executionMethod: ExecutionMethod!
+  solutions: [String!]!
+}
+
+input ParamInput {
+  name: String!
+  type: String!
+}
+
+input ExecutionMethodInput {
+  name: String!
+  params: [ParamInput!]!
+}
+
+input ProblemInput {
+  title: String!
+  description: String!
+  difficulty: String!
+  executionMethod: ExecutionMethodInput!
+  solutions: [String!]!
+}
+
+type Query {
+  getProblems: [Problem!]!
+  getProblemById(id: ID!): Problem
+}
+
+type Mutation {
+  addProblem(input: ProblemInput!): Problem!
+  updateProblem(id: ID!, input: ProblemInput!): Problem!
+  deleteProblem(id: ID!): Problem!
+}

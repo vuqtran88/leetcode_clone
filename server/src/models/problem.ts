@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
-import { ProblemDocument } from '../types';
+import { IProblemDocument } from '../types';
 
-export const problemSchema = new Schema<ProblemDocument>({
+export const problemSchema = new Schema<IProblemDocument>({
     title: { type: String, required: true },
     description: { type: String, required: true },
     difficulty: { type: String, enum: ['easy', 'medium', 'hard'], required: true, default: 'easy' },
@@ -17,4 +17,4 @@ export const problemSchema = new Schema<ProblemDocument>({
     solutions: { type: [String], required: true },
 });
 
-export const Problem = model<ProblemDocument>('Problem', problemSchema);
+export const Problem = model<IProblemDocument>('Problem', problemSchema);

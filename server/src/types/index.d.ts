@@ -1,35 +1,35 @@
-export interface TestcaseType {
+export interface ITestcase {
     id: string;
-    params: ParamType[];
+    params: IParam[];
     expected: string;
     problemId: string;
 };
 
-export interface ParamType {
+export interface IParam {
     name: string;
     type: string;
     value: string;
 };
 
-export interface ProblemDocument extends Document {
+export interface IProblemDocument extends Document {
     title: string;
     description: string;
     difficulty: 'easy' | 'medium' | 'hard';
     executionMethod: {
         name: string;
-        params: [executionMethodParam];
+        params: [IExecutionMethodParam];
     };
     solutions: string[];
 }
 
-interface SubmissionType extends Document {
+interface ISubmission extends Document {
     code: string;
     problemId: mongoose.Types.ObjectId;
     userId: mongoose.Types.ObjectId;
     timeStamp: Date;
 }
 
-export interface executionMethodParam {
+export interface IExecutionMethodParam {
     name: string;
     type: string;
 }
